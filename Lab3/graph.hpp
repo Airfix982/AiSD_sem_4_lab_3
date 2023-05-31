@@ -1,6 +1,6 @@
 #pragma once
 #include<iostream>
-#include<set>
+#include<vector>
 using namespace std;
 
 
@@ -13,29 +13,31 @@ using namespace std;
 
 
 
-template<typename Vertex, typename Distance = double>
+template<typename Vertex_type, typename Distance_type = double>
 class Graph {
 public:
     struct Edge;
     struct One_vertex;
-    set<One_vertex> graph;
     Graph()=default;
     ~Graph()=default;
+    
+private:
+    vector<One_vertex> graph;
 
-
+public:
     //проверка-добавление-удаление вершин
-    bool has_vertex(const Vertex& v) const;
-    void add_vertex(const Vertex& v);
-    bool remove_vertex(const Vertex& v);
-    std::vector<Vertex> vertices() const;
+    bool has_vertex(const Vertex_type& v) const;
+    void add_vertex(const Vertex_type& v);
+    bool remove_vertex(const Vertex_type& v);
+    std::vector<Vertex_type> vertices() const;
 
 
     //проверка-добавление-удаление ребер
-    void add_edge(const Vertex& from, const Vertex& to,
-        const Distance& d);
-    bool remove_edge(const Vertex& from, const Vertex& to);
+    void add_edge(const Vertex_type& from, const Vertex_type& to,
+        const Distance_type& d);
+    bool remove_edge(const Vertex_type& from, const Vertex_type& to);
     bool remove_edge(const Edge& e); //c учетом расстояния
-    bool has_edge(const Vertex& from, const Vertex& to) const;
+    bool has_edge(const Vertex_type& from, const Vertex_type& to) const;
     bool has_edge(const Edge& e); //c учетом расстояния в Edge
 
     //получение всех ребер, выходящих из вершины
