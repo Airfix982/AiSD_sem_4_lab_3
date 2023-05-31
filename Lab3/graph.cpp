@@ -20,6 +20,8 @@ struct Graph<Vertex_type, Distance_type>::One_vertex
 	One_vertex(Vertex_type id) : id(id) {};
 	One_vertex(const Vertex_type other_one) : id(other_one.id), edges(other_one.edges) {};
 };
+
+
 template<typename Vertex_type, typename Distance_type>
 bool Graph<Vertex_type, Distance_type>::has_vertex(const Vertex_type& v) const
 {
@@ -37,22 +39,26 @@ bool Graph<Vertex_type, Distance_type>::remove_vertex(const Vertex_type& v)
 	if (!has_vertex) throw "Vertex does not exist";
 	else
 	{
-		for (auto e : graph[v].edges)
+		for (auto vec : graph)
 		{
-			remove_edge(v, (*e).to);
-		}
-		for (auto i : graph)
-		{
-			for (auto e : (*i).edges)
+			if ((*vec).id == v)
 			{
-				if (*e.to == v)
+				for (auto e : *vec.edges)
 				{
-					remove_edge(*i, (*e).to);
+					remove_edge(v, (*e).to);
 				}
+				for (auto i : graph, * i != v)
+				{
+					if (has_edge((*i).id, v)) remove_edge(*i, (*e).to);
+				}
+				graph.erase(vec);
+				break;
 			}
 		}
 	}
 };
+
+
 template<typename Vertex_type, typename Distance_type>
 vector<Vertex_type> Graph<Vertex_type, Distance_type>::vertices() const
 {
@@ -62,4 +68,18 @@ vector<Vertex_type> Graph<Vertex_type, Distance_type>::vertices() const
 		vec.push_back(graph.id);
 	}
 	return vec;
+};
+template<typename Vertex_type, typename Distance_type>
+void Graph<Vertex_type, Distance_type>::add_edge(const Vertex_type& from, const Vertex_type& to, const Distance_type& d)
+{
+	if (!has_vertex(from) || !has_vertex(to)) throw "no vertex(es)";
+	for (auto vert : graph)
+	{
+		if ((*vert).id == from)
+		{
+			Edge e(to, d);
+			(*vert).edges.push_back(e);
+		}
+		break;
+	}
 }
