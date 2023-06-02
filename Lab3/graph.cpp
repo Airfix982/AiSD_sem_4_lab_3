@@ -5,24 +5,29 @@
 #include"graph.hpp"
 using namespace std;
 
-
-
+template<typename Vertex_type, typename Distance_type>
+bool Graph<Vertex_type, Distance_type>::_empty()
+{
+	return graph.begin() == graph.end();
+}
 
 template<typename Vertex_type, typename Distance_type>
 bool Graph<Vertex_type, Distance_type>::has_vertex(const Vertex_type& v) const
 {
-	for (auto vec : graph)
+	for (auto vec = graph.begin(); vec != graph.end(); vec++)
 	{
-		if (vec.id == v) return true;
+		if (vec->id == v) return true;
 	}
 	return false;
 };
+
 template<typename Vertex_type, typename Distance_type>
 void Graph<Vertex_type, Distance_type>::add_vertex(const Vertex_type& v)
 {
 	if (has_vertex(v)) throw "Vertex already exists";
 	else graph.push_back(v);
 };
+
 template<typename Vertex_type, typename Distance_type>
 bool Graph<Vertex_type, Distance_type>::remove_vertex(const Vertex_type& v)
 {
@@ -66,26 +71,28 @@ void Graph<Vertex_type, Distance_type>::print() const
 {
 	for (auto vert: graph)
 	{
-		cout << vert.id << "   " << "[";
-		for (auto ed : vert.edges)
+		cout << vert.id << "  ---> " << "[";
+		for (auto ed = vert.edges.begin(); ed != vert.edges.end(); ed++)
 		{
-			cout << ed.to << ", ";
+			cout << "{" << ed->to << ", " << ed->weight << "}";
+			if(ed+1 != vert.edges.end()) cout << ", ";
 		}
-		cout << "]";
+		cout << "]" << endl;
 	}
 };
+
 template<typename Vertex_type, typename Distance_type>
 void Graph<Vertex_type, Distance_type>::add_edge(const Vertex_type& from, const Vertex_type& to, const Distance_type& d)
 {
 	if (!has_vertex(from) || !has_vertex(to)) throw "no vertex(es)";
-	for (auto vert : graph)
+	for (auto vert = graph.begin(); vert != graph.end(); vert++)
 	{
-		if (vert.id == from)
+		if (vert->id == from)
 		{
 			Edge e(to, d);
-			vert.edges.push_back(e);
+			vert->edges.push_back(e);
+			break;
 		}
-		break;
 	}
 };
 template<typename Vertex_type, typename Distance_type>

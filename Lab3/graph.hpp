@@ -37,6 +37,7 @@ public:
     bool remove_vertex(const Vertex_type& v);
     vector<Vertex_type> vertices() const;
     void print() const;
+    bool _empty();
 
     //проверка-добавление-удаление ребер
     void add_edge(const Vertex_type& from, const Vertex_type& to,
