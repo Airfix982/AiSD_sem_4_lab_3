@@ -192,3 +192,9 @@ vector<Edge<Vertex_type, Distance_type>> Graph<Vertex_type, Distance_type>::edge
 		}
 	}
 }
+
+template<typename Vertex_type, typename Distance_type>
+size_t Graph<Vertex_type, Distance_type>::order() const
+{
+	return size_t(size(graph));
+}

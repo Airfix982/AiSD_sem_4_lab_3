@@ -52,7 +52,7 @@ public:
     //получение всех ребер, выходящих из вершины
     vector<Edge<Vertex_type, Distance_type>> edges(const Vertex_type& vertex);
 
-    //size_t order() const; //порядок
+    size_t order() const; //порядок
     //size_t degree() const; //степень
 
 

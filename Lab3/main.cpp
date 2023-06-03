@@ -564,12 +564,23 @@ void all_e(Graph<Vertex_type, Distance_type>& gr)
 	}
 }
 
+template<typename Vertex_type, typename Distance_type>
+void ord(Graph<Vertex_type, Distance_type>& gr)
+{
+	system("cls");
+	size_t order = gr.order();
+	if(order == 0) SetConsoleTextAttribute(hStdOut, RED);
+	else SetConsoleTextAttribute(hStdOut, GREEN);
+	cout << "Порядок графа: " << order << endl;
+	char ch = _getch();
+}
+
 int main()
 {
 	setlocale(0, "rus");
 	string main_menu[] = { "Добавить вершину","Проверить наличие вершины","Удалить вершину","Добавить ребро","Удалить ребро",
 		"Удалить ребро с учетом расстояния","Проверить наличие ребра","Проверить наличие ребра с учетом расстояния","Все ребра из вершины",
-		"Закончить (ESC)"};
+		"Пoрядок графа","Закончить(ESC)"};
 	int active_menu = 0;
 	char ch;
 	Graph<int> gr;
@@ -643,6 +654,9 @@ int main()
 				break;
 			case 8:
 				all_e(gr);
+				break;
+			case 9:
+				ord(gr);
 				break;
 			case size(main_menu) - 1:
 				SetConsoleTextAttribute(hStdOut, DEF_COL);
