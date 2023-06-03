@@ -159,7 +159,7 @@ void check4v(Graph<Vertex_type, Distance_type>& gr)
 }
 
 template<typename Vertex_type, typename Distance_type>
-void add_e(Graph<Vertex_type, Distance_type>& gr)// Доделай курсор и нормальный endl
+void add_e(Graph<Vertex_type, Distance_type>& gr)
 {
 	while(1)
 	{
@@ -295,6 +295,113 @@ void del_v(Graph<Vertex_type, Distance_type>& gr)
 	}
 }
 
+template<typename Vertex_type, typename Distance_type>
+void del_e(Graph<Vertex_type, Distance_type>& gr, bool with_dist)
+{
+	while (1)
+	{
+		Vertex_type from, to;
+		Distance_type dis;
+		while (1)
+		{
+			SetConsoleTextAttribute(hStdOut, DEF_COL);
+			system("cls");
+			ConsoleCursorVisible(true, 100);
+			cout << "enter from: ";
+			int choice = 0;
+			while (!(cin >> from) || (cin.peek() != '\n'))
+			{
+				cin.clear();
+				while (cin.get() != '\n');
+
+				choice = s_choice(RED, "Text was entered");
+
+				break;
+			}
+			if (choice == 0)
+			{
+				if (!gr.has_vertex(from)) choice = s_choice(RED, "No vertex");
+			}
+			if (choice == 1) continue;
+			else if (choice == 2) return;
+			else
+			{
+				cout << endl;
+				break;
+			}
+		}
+		while (1)
+		{
+			SetConsoleTextAttribute(hStdOut, DEF_COL);
+			system("cls");
+			ConsoleCursorVisible(true, 100);
+			cout << "enter to: ";
+			int choice = 0;
+			while (!(cin >> to) || (cin.peek() != '\n'))
+			{
+				cin.clear();
+				while (cin.get() != '\n');
+
+				choice = s_choice(RED, "Text was entered");
+
+				break;
+			}
+			if (choice == 0)
+			{
+				if (!gr.has_vertex(to)) choice = s_choice(RED, "No vertex");
+			}
+			if (choice == 1) continue;
+			else if (choice == 2) return;
+			else
+			{
+				cout << endl;
+				break;
+			}
+		}
+		if (with_dist)
+		{
+			while (1)
+			{
+				SetConsoleTextAttribute(hStdOut, DEF_COL);
+				system("cls");
+				ConsoleCursorVisible(true, 100);
+				cout << "enter distance: ";
+				int choice = 0;
+				while (!(cin >> dis) || (cin.peek() != '\n'))
+				{
+					cin.clear();
+					while (cin.get() != '\n');
+
+					choice = s_choice(RED, "Text was entered");
+
+					break;
+				}
+				if (choice == 1) continue;
+				else if (choice == 2) return;
+				else break;
+			}
+		}
+		try
+		{
+			if (!with_dist)
+			{
+				gr.remove_edge(from, to);
+			}
+			else
+			{
+				gr.remove_edge(from, to, dis);
+			}
+		}
+		catch (const char* e)
+		{
+			int choice = s_choice(RED, e);
+			if (choice == 2) return;
+			else continue;
+		}
+		return;
+	}
+}
+
 int main()
 {
 	setlocale(0, "rus");
@@ -360,10 +467,10 @@ int main()
 				add_e(gr);
 				break;
 			case 4:
-				//del_e(false);
+				del_e(gr, false);
 				break;
 			case 5:
-				//del_e(true);
+				del_e(gr, true);
 				break;
 			case size(main_menu) - 1:
 				SetConsoleTextAttribute(hStdOut, DEF_COL);

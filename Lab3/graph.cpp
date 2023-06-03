@@ -36,7 +36,7 @@ bool Graph<Vertex_type, Distance_type>::remove_vertex(const Vertex_type& v)
 	{
 		for ( auto vec = graph.begin(); vec != graph.end(); )
 		{
-			if ((*vec).id == v)
+			if (vec->id == v)
 			{
 				for (auto i = graph.begin(); i != graph.end(); i++)
 				{
@@ -62,6 +62,7 @@ vector<Vertex_type> Graph<Vertex_type, Distance_type>::vertices() const
 	}
 	return vec;
 };
+
 template<typename Vertex_type, typename Distance_type>
 void Graph<Vertex_type, Distance_type>::print() const
 {
@@ -91,19 +92,20 @@ void Graph<Vertex_type, Distance_type>::add_edge(const Vertex_type& from, const 
 		}
 	}
 };
+
 template<typename Vertex_type, typename Distance_type>
 bool Graph<Vertex_type, Distance_type>::remove_edge(const Vertex_type& from, const Vertex_type& to)
 {
 	if (!has_vertex(from) || !has_vertex(to)) throw "no vertex(es)";
 	for (auto vert = graph.begin(); vert != graph.end();)
 	{
-		if ((*vert).id == from)
+		if (vert->id == from)
 		{
-			for (auto e = (*vert).edges.begin(); e != (*vert).edges.end();)
+			for (auto e = vert->edges.begin(); e != vert->edges.end();)
 			{
-				if ((*e).to == to)
+				if (e->to == to)
 				{
-					e = (*vert).edges.erase(e);
+					e = vert->edges.erase(e);
 					return true;
 				}
 				++e;
@@ -115,18 +117,18 @@ bool Graph<Vertex_type, Distance_type>::remove_edge(const Vertex_type& from, con
 	return false;
 };
 template<typename Vertex_type, typename Distance_type>
-bool Graph<Vertex_type, Distance_type>::remove_edge(const Edge& ed, const Vertex_type& from)
+bool Graph<Vertex_type, Distance_type>::remove_edge(const Vertex_type& from, const Vertex_type& to, const Distance_type weight)
 {
-	if (!has_vertex(from) || !has_vertex(ed.to)) throw "no vertex(es)";
+	if (!has_vertex(from) || !has_vertex(to)) throw "no vertex(es)";
 	for (auto vert = graph.begin(); vert != graph.end();)
 	{
-		if ((*vert).id == from)
+		if (vert->id == from)
 		{
-			for (auto e = (*vert).edges.begin(); e != (*vert).edges.end();)
+			for (auto e = vert->edges.begin(); e != vert->edges.end(); e++)
 			{
-				if ((*e).to == ed.to && (*e).weight == ed.weight)
+				if (e->to == to && e->weight == weight)
 				{
-					e = (*vert).edges.erase(e);
+					e = vert->edges.erase(e);
 					return true;
 				}
 			}
@@ -136,6 +138,7 @@ bool Graph<Vertex_type, Distance_type>::remove_edge(const Edge& ed, const Vertex
 	}
 	return false;
 };
+
 template<typename Vertex_type, typename Distance_type>
 bool Graph<Vertex_type, Distance_type>::has_edge(const Vertex_type& from, const Vertex_type& to) const
 {
