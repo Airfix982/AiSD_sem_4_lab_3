@@ -38,14 +38,10 @@ bool Graph<Vertex_type, Distance_type>::remove_vertex(const Vertex_type& v)
 		{
 			if ((*vec).id == v)
 			{
-				for (auto e : (*vec).edges)
+				for (auto i = graph.begin(); i != graph.end(); i++)
 				{
-					remove_edge(v, e.to);
-				}
-				for (auto i : graph)
-				{
-					if (i.id == v) continue;
-					if (has_edge(i.id, v)) remove_edge(i.id, v);
+					if (i->id == v) continue;
+					while(has_edge(i->id, v)) remove_edge(i->id, v);
 				}
 				vec = graph.erase(vec);
 				break;

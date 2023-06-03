@@ -24,71 +24,18 @@ void ConsoleCursorVisible(bool show, short size)
 	structCursorInfo.dwSize = size;
 	SetConsoleCursorInfo(hStdOut, &structCursorInfo);
 }
-int s_choice(const char* e, int col)
-{
-	string choice_menu[] = { "Назад (ESC)" };
-	SetConsoleTextAttribute(hStdOut, DEF_COL);
-	int active_menu = 0;
-	char ch;
-	while (1)
-	{
-		system("cls");
-		ConsoleCursorVisible(false, 100);
-		SetConsoleTextAttribute(hStdOut, col);
-		cout << e << endl << endl;
-		for (int i = 0; i < size(choice_menu); i++)
-		{
-			if (i == active_menu) SetConsoleTextAttribute(hStdOut, ACT_COL);
-			else SetConsoleTextAttribute(hStdOut, DEF_COL);
-			cout << choice_menu[i] << endl;
-			ch = _getch();
-			if (ch == -32) ch = _getch();
-		}
-		switch (ch)
-		{
-		case ESC:
-			return 2;
-		case UP:
-			if (active_menu > 0) active_menu--;
-			system("cls");
-			break;
-		case DOWN:
-			if (active_menu < size(choice_menu) - 1) active_menu++;
-			system("cls");
-			break;
-		case ENTER:
-			switch (active_menu)
-			{
-			case 1:
-				return 2;
-			case 0:
-				return 1;
-			}
-		default:
-			break;
-		}
-	}
-}
-int s_choice(int mist)
+
+int s_choice(int col = DEF_COL, const char* e = "nothing")
 {
 	string choice_menu[] = { "Попытаться снова","Назад (ESC)" };
-	SetConsoleTextAttribute(hStdOut, DEF_COL);
+	ConsoleCursorVisible(false, 100);
 	int active_menu = 0;
 	char ch;
 	while (1)
 	{
 		system("cls");
-		ConsoleCursorVisible(false, 100);
-		if (mist == 1)
-		{
-			SetConsoleTextAttribute(hStdOut, RED);
-			cout << "Text was entered" << endl << endl;
-		}
-		else if (mist == 2)
-		{
-			SetConsoleTextAttribute(hStdOut, RED);
-			cout << "Integer was expected but float was entered" << endl << endl;
-		}
+		SetConsoleTextAttribute(hStdOut, col);
+		cout << e << endl << endl;
 		for (int i = 0; i < size(choice_menu); i++)
 		{
 			if (i == active_menu) SetConsoleTextAttribute(hStdOut, ACT_COL);
@@ -97,7 +44,7 @@ int s_choice(int mist)
 		}
 		ch = _getch();
 		if (ch == -32) ch = _getch();
-		switch(ch)
+		switch (ch)
 		{
 		case ESC:
 			return 2;
@@ -126,97 +73,226 @@ int s_choice(int mist)
 template<typename Vertex_type, typename Distance_type>
 void add_v(Graph<Vertex_type, Distance_type>& gr)
 {
-	Vertex_type new_v;
 	while (1)
 	{
-		SetConsoleTextAttribute(hStdOut, DEF_COL);
-		system("cls");
-		cout << "enter value: " ;
-		ConsoleCursorVisible(true, 100);
-		int choice = 0;
-		while (!(cin >> new_v) || (cin.peek() != '\n'))
+		Vertex_type new_v;
+		while (1)
 		{
-			cin.clear();
-			while (cin.get() != '\n');
+			SetConsoleTextAttribute(hStdOut, DEF_COL);
+			system("cls");
+			cout << "enter value: ";
+			ConsoleCursorVisible(true, 100);
+			int choice = 0;
+			while (!(cin >> new_v) || (cin.peek() != '\n'))
+			{
+				cin.clear();
+				while (cin.get() != '\n');
 
-			choice = s_choice(1);
+				choice = s_choice(RED, "Text was entered");
 
-			break;
+				break;
+			}
+			if (choice == 1) continue;
+			else if (choice == 2) return;
+			else break;
 		}
-		if (choice == 1) continue;
-		else if (choice == 2) return;
-		else break;
+		try
+		{
+			gr.add_vertex(new_v);
+		}
+		catch (const char* e)
+		{
+			int choice = s_choice(RED, e);
+			if (choice == 2) return;
+			else continue;
+		}
+		return;
 	}
-	try
-	{
-		gr.add_vertex(new_v);
-	}
-	catch(const char* e)
-	{
-		int choice = s_choice(e, RED);
-		if (choice) return;
-	}
-	return;
 }
 
 template<typename Vertex_type, typename Distance_type>
 void check4v(Graph<Vertex_type, Distance_type>& gr)
 {
-	Vertex_type new_v;
+	while(1)
+	{
+		Vertex_type new_v;
+		while (1)
+		{
+			SetConsoleTextAttribute(hStdOut, DEF_COL);
+			system("cls");
+			ConsoleCursorVisible(true, 100);
+			cout << "enter value";
+			int choice = 0;
+			while (!(cin >> new_v) || (cin.peek() != '\n'))
+			{
+				cin.clear();
+				while (cin.get() != '\n');
+
+				choice = s_choice(RED, "Text vas entered");
+
+				break;
+			}
+			if (choice == 1) continue;
+			else if (choice == 2) return;
+			else
+			{
+				cout << endl;
+				break;
+			}
+		}
+		try
+		{
+			int choice;
+			if (gr.has_vertex(new_v)) choice = s_choice(GREEN, "This graph has this vertex");
+			else choice = s_choice(RED, "This graph does not have this vertex");
+			if (choice == 2)return;
+			else continue;
+		}
+		catch (const char* e)
+		{
+			int choice = s_choice(RED, e);
+			if (choice == 2) return;
+			else continue;
+		}
+		return;
+	}
+}
+
+template<typename Vertex_type, typename Distance_type>
+void add_e(Graph<Vertex_type, Distance_type>& gr)// Доделай курсор и нормальный endl
+{
+	while(1)
+	{
+		Vertex_type from, to;
+		Distance_type dis;
+		while (1)
+		{
+			SetConsoleTextAttribute(hStdOut, DEF_COL);
+			system("cls");
+			ConsoleCursorVisible(true, 100);
+			cout << "enter from: ";
+			int choice = 0;
+			while (!(cin >> from) || (cin.peek() != '\n'))
+			{
+				cin.clear();
+				while (cin.get() != '\n');
+
+				choice = s_choice(RED, "Text was entered");
+
+				break;
+			}
+			if (choice == 0)
+			{
+				if (!gr.has_vertex(from)) choice = s_choice(RED, "No vertex");
+			}
+			if (choice == 1) continue;
+			else if (choice == 2) return;
+			else
+			{
+				cout << endl;
+				break;
+			}
+		}
+		while (1)
+		{
+			SetConsoleTextAttribute(hStdOut, DEF_COL);
+			system("cls");
+			ConsoleCursorVisible(true, 100);
+			cout << "enter to: ";
+			int choice = 0;
+			while (!(cin >> to) || (cin.peek() != '\n'))
+			{
+				cin.clear();
+				while (cin.get() != '\n');
+
+				choice = s_choice(RED, "Text was entered");
+
+				break;
+			}
+			if (choice == 0)
+			{
+				if (!gr.has_vertex(to)) choice = s_choice(RED, "No vertex");
+			}
+			if (choice == 1) continue;
+			else if (choice == 2) return;
+			else
+			{
+				cout << endl;
+				break;
+			}
+		}
+		while (1)
+		{
+			SetConsoleTextAttribute(hStdOut, DEF_COL);
+			system("cls");
+			ConsoleCursorVisible(true, 100);
+			cout << "enter distance: ";
+			int choice = 0;
+			while (!(cin >> dis) || (cin.peek() != '\n'))
+			{
+				cin.clear();
+				while (cin.get() != '\n');
+
+				choice = s_choice(RED, "Text was entered");
+
+				break;
+			}
+			if (choice == 1) continue;
+			else if (choice == 2) return;
+			else break;
+		}
+		try
+		{
+			gr.add_edge(from, to, dis);
+		}
+		catch (const char* e)
+		{
+			int choice = s_choice(RED, e);
+			if (choice == 2) return;
+			else continue;
+		}
+		return;
+	}
+}
+
+template<typename Vertex_type, typename Distance_type>
+void del_v(Graph<Vertex_type, Distance_type>& gr)
+{
 	while (1)
 	{
-		SetConsoleTextAttribute(hStdOut, DEF_COL);
-		system("cls");
-		cout << "enter value" << endl;
-		int choice = 0;
-		while (!(cin >> new_v) || (cin.peek() != '\n'))
+		Vertex_type new_v;
+		while (1)
 		{
-			cin.clear();
-			while (cin.get() != '\n');
+			SetConsoleTextAttribute(hStdOut, DEF_COL);
+			system("cls");
+			cout << "enter value: ";
+			ConsoleCursorVisible(true, 100);
+			int choice = 0;
+			while (!(cin >> new_v) || (cin.peek() != '\n'))
+			{
+				cin.clear();
+				while (cin.get() != '\n');
 
-			choice = s_choice(1);
+				choice = s_choice(RED, "Text was entered");
 
-			break;
+				break;
+			}
+			if (choice == 1) continue;
+			else if (choice == 2) return;
+			else break;
 		}
-		if (choice == 1) continue;
-		else if (choice == 2) return;
-		else break;
-	}
-	try
-	{
-		int choice;
-		if (gr.has_vertex(new_v)) choice = s_choice("This graph has this vertex", GREEN);
-		else choice = s_choice("This graph does not have this vertex", RED);
-	}
-	catch (const char* e)
-	{
-		cout << e;
+		try
+		{
+			gr.remove_vertex(new_v);
+		}
+		catch (const char* e)
+		{
+			int choice = s_choice(RED, e);
+			if (choice == 2) return;
+			else continue;
+		}
 		return;
 	}
-	return;
-}
-template<typename Vertex_type, typename Distance_type>
-void add_e(Graph<Vertex_type, Distance_type>& gr)
-{
-	Vertex_type from, to;
-	Distance_type dis;
-	system("cls");
-	cout << "enter from" << endl;
-	cin >> from;
-	cout << endl << "enter to" << endl;
-	cin >> to;
-	cout << endl << "enter distance" << endl;
-	cin >> dis;
-	try
-	{
-		gr.add_edge(from, to, dis);
-	}
-	catch (const char* e)
-	{
-		cout << e;
-		return;
-	}
-	return;
 }
 
 int main()
@@ -259,7 +335,7 @@ int main()
 		{
 		case ESC:
 			SetConsoleTextAttribute(hStdOut, DEF_COL);
-			exit(0);
+			return 0;
 		case UP:
 			if (active_menu > 0) active_menu--;
 			system("cls");
@@ -278,7 +354,7 @@ int main()
 				check4v(gr);
 				break;
 			case 2:
-				//del_v(gr);
+				del_v(gr);
 				break;
 			case 3:
 				add_e(gr);
@@ -291,7 +367,7 @@ int main()
 				break;
 			case size(main_menu) - 1:
 				SetConsoleTextAttribute(hStdOut, DEF_COL);
-				exit(0);
+				return 0;
 			}
 		default:
 			break;
