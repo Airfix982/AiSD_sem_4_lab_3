@@ -575,12 +575,23 @@ void ord(Graph<Vertex_type, Distance_type>& gr)
 	char ch = _getch();
 }
 
+template<typename Vertex_type, typename Distance_type>
+void deg(Graph<Vertex_type, Distance_type>& gr)
+{
+	system("cls");
+	size_t degree = gr.degree();
+	if (degree == 0) SetConsoleTextAttribute(hStdOut, RED);
+	else SetConsoleTextAttribute(hStdOut, GREEN);
+	cout << "Порядок графа: " << degree << endl;
+	char ch = _getch();
+}
+
 int main()
 {
 	setlocale(0, "rus");
 	string main_menu[] = { "Добавить вершину","Проверить наличие вершины","Удалить вершину","Добавить ребро","Удалить ребро",
 		"Удалить ребро с учетом расстояния","Проверить наличие ребра","Проверить наличие ребра с учетом расстояния","Все ребра из вершины",
-		"Пoрядок графа","Закончить(ESC)"};
+		"Пoрядок графа","Степень графа","Закончить(ESC)"};
 	int active_menu = 0;
 	char ch;
 	Graph<int> gr;
@@ -657,6 +668,9 @@ int main()
 				break;
 			case 9:
 				ord(gr);
+				break;
+			case 10:
+				deg(gr);
 				break;
 			case size(main_menu) - 1:
 				SetConsoleTextAttribute(hStdOut, DEF_COL);

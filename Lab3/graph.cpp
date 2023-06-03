@@ -191,10 +191,21 @@ vector<Edge<Vertex_type, Distance_type>> Graph<Vertex_type, Distance_type>::edge
 			return vert->edges;
 		}
 	}
-}
+};
 
 template<typename Vertex_type, typename Distance_type>
 size_t Graph<Vertex_type, Distance_type>::order() const
 {
 	return size_t(size(graph));
-}
+};
+
+template<typename Vertex_type, typename Distance_type>
+size_t Graph<Vertex_type, Distance_type>::degree() const
+{
+	size_t degree = 0;
+	for (auto vert = graph.begin(); vert != graph.end(); vert++)
+	{
+		degree += size_t(size(vert->edges));
+	}
+	return degree;
+};

@@ -53,7 +53,7 @@ public:
     vector<Edge<Vertex_type, Distance_type>> edges(const Vertex_type& vertex);
 
     size_t order() const; //порядок
-    //size_t degree() const; //степень
+    size_t degree() const; //степень
 
 
     //поиск кратчайшего пути
