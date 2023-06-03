@@ -43,9 +43,9 @@ public:
     void add_edge(const Vertex_type& from, const Vertex_type& to,
         const Distance_type& d);
     bool remove_edge(const Vertex_type& from, const Vertex_type& to);
-    bool remove_edge(const Vertex_type& from, const Vertex_type& to, const Distance_type weight); //c учетом расстояния
+    bool remove_edge(const Vertex_type& from, const Vertex_type& to, const Distance_type& weight); //c учетом расстояния
     bool has_edge(const Vertex_type& from, const Vertex_type& to) const;
-    //bool has_edge(const Edge& e); //c учетом расстояния в Edge
+    bool has_edge(const Vertex_type& from, const Vertex_type& to, const Distance_type& weight) const; //c учетом расстояния в Edge
 
     //получение всех ребер, выходящих из вершины
     //std::vector<Edge> edges(const Vertex& vertex);

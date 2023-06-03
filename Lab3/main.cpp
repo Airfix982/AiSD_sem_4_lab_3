@@ -111,7 +111,7 @@ void add_v(Graph<Vertex_type, Distance_type>& gr)
 }
 
 template<typename Vertex_type, typename Distance_type>
-void check4v(Graph<Vertex_type, Distance_type>& gr)
+void has_v(Graph<Vertex_type, Distance_type>& gr)
 {
 	while(1)
 	{
@@ -402,11 +402,125 @@ void del_e(Graph<Vertex_type, Distance_type>& gr, bool with_dist)
 	}
 }
 
+template<typename Vertex_type, typename Distance_type>
+void has_e(Graph<Vertex_type, Distance_type>& gr, bool with_dist)
+{
+	while (1)
+	{
+		Vertex_type from, to;
+		Distance_type dis;
+		while (1)
+		{
+			SetConsoleTextAttribute(hStdOut, DEF_COL);
+			system("cls");
+			ConsoleCursorVisible(true, 100);
+			cout << "enter from: ";
+			int choice = 0;
+			while (!(cin >> from) || (cin.peek() != '\n'))
+			{
+				cin.clear();
+				while (cin.get() != '\n');
+
+				choice = s_choice(RED, "Text was entered");
+
+				break;
+			}
+			if (choice == 0)
+			{
+				if (!gr.has_vertex(from)) choice = s_choice(RED, "No vertex");
+			}
+			if (choice == 1) continue;
+			else if (choice == 2) return;
+			else
+			{
+				cout << endl;
+				break;
+			}
+		}
+		while (1)
+		{
+			SetConsoleTextAttribute(hStdOut, DEF_COL);
+			system("cls");
+			ConsoleCursorVisible(true, 100);
+			cout << "enter to: ";
+			int choice = 0;
+			while (!(cin >> to) || (cin.peek() != '\n'))
+			{
+				cin.clear();
+				while (cin.get() != '\n');
+
+				choice = s_choice(RED, "Text was entered");
+
+				break;
+			}
+			if (choice == 0)
+			{
+				if (!gr.has_vertex(to)) choice = s_choice(RED, "No vertex");
+			}
+			if (choice == 1) continue;
+			else if (choice == 2) return;
+			else
+			{
+				cout << endl;
+				break;
+			}
+		}
+		if (with_dist)
+		{
+			while (1)
+			{
+				SetConsoleTextAttribute(hStdOut, DEF_COL);
+				system("cls");
+				ConsoleCursorVisible(true, 100);
+				cout << "enter distance: ";
+				int choice = 0;
+				while (!(cin >> dis) || (cin.peek() != '\n'))
+				{
+					cin.clear();
+					while (cin.get() != '\n');
+
+					choice = s_choice(RED, "Text was entered");
+
+					break;
+				}
+				if (choice == 1) continue;
+				else if (choice == 2) return;
+				else break;
+			}
+		}
+		try
+		{
+			int choice;
+			if (!with_dist)
+			{
+				if (gr.has_edge(from, to)) choice = s_choice(GREEN, "This graph has this vertex");
+				else choice = s_choice(RED, "This graph does not have this vertex");
+				if (choice == 2)return;
+				else continue;
+			}
+			else
+			{
+				if (gr.has_edge(from, to, dis)) choice = s_choice(GREEN, "This graph has this vertex");
+				else choice = s_choice(RED, "This graph does not have this vertex");
+				if (choice == 2)return;
+				else continue;
+			}
+		}
+		catch (const char* e)
+		{
+			int choice = s_choice(RED, e);
+			if (choice == 2) return;
+			else continue;
+		}
+		return;
+	}
+}
+
 int main()
 {
 	setlocale(0, "rus");
 	string main_menu[] = {"Добавить вершину","Проверить наличие вершины","Удалить вершину","Добавить ребро","Удалить ребро",
-		"Удалить ребро с учетом расстояния","Закончить (ESC)"};
+		"Удалить ребро с учетом расстояния","Проверить наличие ребра","Проверить наличие ребра с учетом расстояния","Закончить (ESC)"};
 	int active_menu = 0;
 	char ch;
 	Graph<int> gr;
@@ -458,7 +572,7 @@ int main()
 				add_v(gr);
 				break;
 			case 1:
-				check4v(gr);
+				has_v(gr);
 				break;
 			case 2:
 				del_v(gr);
@@ -471,6 +585,12 @@ int main()
 				break;
 			case 5:
 				del_e(gr, true);
+				break;
+			case 6:
+				has_e(gr, false);
+				break;
+			case 7:
+				has_e(gr, true);
 				break;
 			case size(main_menu) - 1:
 				SetConsoleTextAttribute(hStdOut, DEF_COL);
