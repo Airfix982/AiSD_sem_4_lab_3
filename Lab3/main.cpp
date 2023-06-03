@@ -113,7 +113,7 @@ void add_v(Graph<Vertex_type, Distance_type>& gr)
 template<typename Vertex_type, typename Distance_type>
 void has_v(Graph<Vertex_type, Distance_type>& gr)
 {
-	while(1)
+	while (1)
 	{
 		Vertex_type new_v;
 		while (1)
@@ -161,7 +161,7 @@ void has_v(Graph<Vertex_type, Distance_type>& gr)
 template<typename Vertex_type, typename Distance_type>
 void add_e(Graph<Vertex_type, Distance_type>& gr)
 {
-	while(1)
+	while (1)
 	{
 		Vertex_type from, to;
 		Distance_type dis;
@@ -516,11 +516,60 @@ void has_e(Graph<Vertex_type, Distance_type>& gr, bool with_dist)
 	}
 }
 
+template<typename Vertex_type, typename Distance_type>
+void all_e(Graph<Vertex_type, Distance_type>& gr)
+{
+	while (1)
+	{
+		Vertex_type new_v;
+		while (1)
+		{
+			SetConsoleTextAttribute(hStdOut, DEF_COL);
+			system("cls");
+			cout << "enter value: ";
+			ConsoleCursorVisible(true, 100);
+			int choice = 0;
+			while (!(cin >> new_v) || (cin.peek() != '\n'))
+			{
+				cin.clear();
+				while (cin.get() != '\n');
+
+				choice = s_choice(RED, "Text was entered");
+
+				break;
+			}
+			if (choice == 1) continue;
+			else if (choice == 2) return;
+			else break;
+		}
+		try
+		{
+			vector<Edge<Vertex_type, Distance_type>> eds;
+			eds = gr.edges(new_v);
+			system("cls");
+			cout << "Ребра вершины " << new_v << ":" << endl;
+			for (auto i = eds.begin(); i != eds.end(); i++)
+			{
+				cout << "Вершина " << i->to << ", дистанция " << i->weight << endl;
+			}
+			char ch = _getch();
+		}
+		catch (const char* e)
+		{
+			int choice = s_choice(RED, e);
+			if (choice == 2) return;
+			else continue;
+		}
+		return;
+	}
+}
+
 int main()
 {
 	setlocale(0, "rus");
-	string main_menu[] = {"Добавить вершину","Проверить наличие вершины","Удалить вершину","Добавить ребро","Удалить ребро",
-		"Удалить ребро с учетом расстояния","Проверить наличие ребра","Проверить наличие ребра с учетом расстояния","Закончить (ESC)"};
+	string main_menu[] = { "Добавить вершину","Проверить наличие вершины","Удалить вершину","Добавить ребро","Удалить ребро",
+		"Удалить ребро с учетом расстояния","Проверить наличие ребра","Проверить наличие ребра с учетом расстояния","Все ребра из вершины",
+		"Закончить (ESC)"};
 	int active_menu = 0;
 	char ch;
 	Graph<int> gr;
@@ -591,6 +640,9 @@ int main()
 				break;
 			case 7:
 				has_e(gr, true);
+				break;
+			case 8:
+				all_e(gr);
 				break;
 			case size(main_menu) - 1:
 				SetConsoleTextAttribute(hStdOut, DEF_COL);

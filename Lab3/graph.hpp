@@ -6,29 +6,31 @@
 #include<vector>
 using namespace std;
 
-
+template<typename Vertex_type, typename Distance_type = double>
+struct Edge
+{
+    Vertex_type to;
+    Distance_type weight;
+    Edge(Vertex_type to, Distance_type weight = 0) : to(to), weight(weight) {};
+    Edge(const Edge& other_one) : to(other_one.to), weight(other_one.weight) {};
+};
+template<typename Vertex_type, typename Distance_type = double>
+struct One_vertex
+{
+    Vertex_type id;
+    vector<Edge<Vertex_type, Distance_type>> edges;
+    One_vertex(Vertex_type id) : id(id) {};
+    One_vertex(const One_vertex& other_one) : id(other_one.id), edges(other_one.edges) {};
+};
 template<typename Vertex_type, typename Distance_type = double>
 class Graph {
 public:
-    struct Edge
-    {
-        Vertex_type to;
-        Distance_type weight;
-        Edge(Vertex_type to, Distance_type weight = 0) : to(to), weight(weight) {};
-        Edge(const Edge& other_one) : to(other_one.to), weight(other_one.weight) {};
-    };
-    struct One_vertex
-    {
-        Vertex_type id;
-        vector<Edge> edges;
-        One_vertex(Vertex_type id) : id(id) {};
-        One_vertex(const One_vertex& other_one) : id(other_one.id), edges(other_one.edges) {};
-    };
+    
     Graph()=default;
     ~Graph()=default;
     
 private:
-    vector<One_vertex> graph;
+    vector<One_vertex<Vertex_type, Distance_type>> graph;
 
 public:
     //проверка-добавление-удаление вершин
@@ -48,7 +50,7 @@ public:
     bool has_edge(const Vertex_type& from, const Vertex_type& to, const Distance_type& weight) const; //c учетом расстояния в Edge
 
     //получение всех ребер, выходящих из вершины
-    //std::vector<Edge> edges(const Vertex& vertex);
+    vector<Edge<Vertex_type, Distance_type>> edges(const Vertex_type& vertex);
 
     //size_t order() const; //порядок
     //size_t degree() const; //степень
@@ -61,3 +63,5 @@ public:
     //std::vector<Vertex>  walk(const Vertex& start_vertex)const;
 };
 template Graph<int>;
+template Edge<int>;
+template One_vertex<int>;

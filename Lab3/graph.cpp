@@ -179,3 +179,16 @@ bool Graph<Vertex_type, Distance_type>::has_edge(const Vertex_type& from, const 
 	}
 	return false;
 };
+
+template<typename Vertex_type, typename Distance_type>
+vector<Edge<Vertex_type, Distance_type>> Graph<Vertex_type, Distance_type>::edges(const Vertex_type& vertex)
+{
+	if (!has_vertex(vertex)) throw "no vertex(es)";
+	for (auto vert = graph.begin(); vert != graph.end(); vert++)
+	{
+		if (vert->id == vertex)
+		{
+			return vert->edges;
+		}
+	}
+}
