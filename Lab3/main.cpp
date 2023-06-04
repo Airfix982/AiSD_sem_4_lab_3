@@ -586,12 +586,97 @@ void deg(Graph<Vertex_type, Distance_type>& gr)
 	char ch = _getch();
 }
 
+template<typename Vertex_type, typename Distance_type>
+void shorts(Graph<Vertex_type, Distance_type>& gr)
+{
+	while (1)
+	{
+		Vertex_type from, to;
+		vector<Vertex_type> vec;
+		while (1)
+		{
+			SetConsoleTextAttribute(hStdOut, DEF_COL);
+			system("cls");
+			ConsoleCursorVisible(true, 100);
+			cout << "enter from: ";
+			int choice = 0;
+			while (!(cin >> from) || (cin.peek() != '\n'))
+			{
+				cin.clear();
+				while (cin.get() != '\n');
+
+				choice = s_choice(RED, "Text was entered");
+
+				break;
+			}
+			if (choice == 0)
+			{
+				if (!gr.has_vertex(from)) choice = s_choice(RED, "No vertex");
+			}
+			if (choice == 1) continue;
+			else if (choice == 2) return;
+			else
+			{
+				cout << endl;
+				break;
+			}
+		}
+		while (1)
+		{
+			SetConsoleTextAttribute(hStdOut, DEF_COL);
+			system("cls");
+			ConsoleCursorVisible(true, 100);
+			cout << "enter to: ";
+			int choice = 0;
+			while (!(cin >> to) || (cin.peek() != '\n'))
+			{
+				cin.clear();
+				while (cin.get() != '\n');
+
+				choice = s_choice(RED, "Text was entered");
+
+				break;
+			}
+			if (choice == 0)
+			{
+				if (!gr.has_vertex(to)) choice = s_choice(RED, "No vertex");
+			}
+			if (choice == 1) continue;
+			else if (choice == 2) return;
+			else
+			{
+				cout << endl;
+				break;
+			}
+		}
+		try
+		{
+			vec = gr.shortest_path(from, to);
+			system("cls");
+			for (auto i : vec)
+			{
+				cout << i;
+			}
+			char ch = _getch();
+		}
+		catch (const char* e)
+		{
+			int choice = s_choice(RED, e);
+			if (choice == 2) return;
+			else continue;
+		}
+		return;
+	}
+	
+	
+}
+
 int main()
 {
 	setlocale(0, "rus");
 	string main_menu[] = { "Добавить вершину","Проверить наличие вершины","Удалить вершину","Добавить ребро","Удалить ребро",
 		"Удалить ребро с учетом расстояния","Проверить наличие ребра","Проверить наличие ребра с учетом расстояния","Все ребра из вершины",
-		"Пoрядок графа","Степень графа","Закончить(ESC)"};
+		"Пoрядок графа","Степень графа","Кратчайший путь","Закончить(ESC)"};
 	int active_menu = 0;
 	char ch;
 	Graph<int> gr;
@@ -671,6 +756,9 @@ int main()
 				break;
 			case 10:
 				deg(gr);
+				break;
+			case 11:
+				shorts(gr);
 				break;
 			case size(main_menu) - 1:
 				SetConsoleTextAttribute(hStdOut, DEF_COL);
