@@ -214,45 +214,6 @@ size_t Graph<Vertex_type, Distance_type>::degree() const
 	return degree;
 };
 
-
-
-
-template<typename Vertex_type, typename Distance_type>
-struct Vertex_info
-{
-	Vertex_info id;
-	bool visited;
-	Distance_type distance;
-	Vertex_type prev_vertex;
-	Vertex_info(bool visited, Distance_type distance, Vertex_type prev_vertex, Vertex_type id) : visited(visited), distance(distance), prev_vertex(prev_vertex), id(id) {};
-};
-
-template<typename Vertex_type, typename Distance_type>
-bool compare_by_weight(const Vertex_info<Vertex_type, Distance_type>& one, const Vertex_info<Vertex_type, Distance_type>& two)
-{
-	return one.distance < two.distance;
-}
-
-template<typename Vertex_type, typename Distance_type>
-pair<Distance_type, Vertex_type> findMin(set<pair<Distance_type, Vertex_type>>& my_set)
-{
-	if (!my_set.empty())
-	{
-		auto min_it = my_set.begin();
-		pair<Distance_type, Vertex_type> min_element = *(my_set.begin());
-		for (auto i = my_set.begin(); i != my_set.end(); i++)
-		{
-			if (i->first < min_element.first)
-			{
-				min_element = (*i);
-				min_it = i;
-			}
-		}
-		my_set.erase(min_it);
-		return min_element;
-	}
-}
-
 template<typename Vertex_type, typename Distance_type>
 Distance_type Graph<Vertex_type, Distance_type>::relax(const Vertex_type& from, const Vertex_type& to, const Vertex_type& betw, const Distance_type& dis)
 {
