@@ -384,7 +384,7 @@ vector<Vertex_type> Graph<Vertex_type, Distance_type>::shortest_path(const Verte
 					{
 						if (v_q->first == e->to)
 						{
-							v_q->second = e->weight + u_dist;//здесь надо к вкью секонд добавлять расстояние до вершины u 
+							v_q->second = e->weight;//здесь надо к вкью секонд добавлять расстояние до вершины u 
 							for (auto e1 = v->edges.begin(); e1 != v->edges.end(); e1++)
 							{
 								if(e1->to != e->to)

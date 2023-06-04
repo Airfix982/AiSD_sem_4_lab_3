@@ -653,9 +653,12 @@ void shorts(Graph<Vertex_type, Distance_type>& gr)
 		{
 			vec = gr.shortest_path(from, to);
 			system("cls");
-			for (auto i : vec)
+			SetConsoleTextAttribute(hStdOut, DEF_COL);
+			cout << "Кратчайший путь: ";
+			for (auto i = vec.begin(); i != vec.end();i++)
 			{
-				cout << i;
+				cout << *i;
+				if (i + 1 != vec.end()) cout << "-";
 			}
 			char ch = _getch();
 		}
