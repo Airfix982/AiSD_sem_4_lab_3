@@ -212,7 +212,7 @@ size_t Graph<Vertex_type, Distance_type>::degree() const
 		degree += size_t(size(vert->edges));
 	}
 	return degree;
-};
+}; 
 
 template<typename Vertex_type, typename Distance_type>
 Distance_type Graph<Vertex_type, Distance_type>::relax(const Vertex_type& from, const Vertex_type& to, const Vertex_type& betw, const Distance_type& dis)
@@ -260,7 +260,7 @@ void sort_q(vector<pair<Vertex_type, Distance_type>>& Q)
 }
 
 template<typename Vertex_type, typename Distance_type>
-void find_path(vector<Vertex_type>& victor, const One_vertex<Vertex_type, Distance_type>& id, const vector<One_vertex<Vertex_type, Distance_type>>& graph)
+void find_path(vector<Vertex_type>& victor, const One_vertex<Vertex_type, Distance_type>& id, vector<One_vertex<Vertex_type, Distance_type>>& graph)
 {
 	victor.insert(victor.begin(), id.prev);
 	for (auto j = graph.begin(); j != graph.end(); j++)
@@ -390,4 +390,111 @@ vector<Vertex_type> Graph<Vertex_type, Distance_type>::shortest_path(const Verte
 		}
 	}
 	return victor;
+}
+
+template<typename Vertex_type, typename Distance_type>
+void walk_all_vertexes(vector<Vertex_type>&walked, const Vertex_type& start_vertex, vector<One_vertex<Vertex_type, Distance_type>>& graph)
+{
+	walked.push_back(start_vertex);
+	for (auto v = graph.begin(); v != graph.end(); v++)
+	{
+		if (v->id == start_vertex)
+		{
+			v->color = 1;
+			for (auto e = v->edges.begin(); e != v->edges.end(); e++)
+			{
+				for (auto v1 = graph.begin(); v1 != graph.end(); v1++)
+				{
+					if (v1->id == e->to)
+					{
+						if (v1->color == 0)
+						{
+							walk_all_vertexes(walked, v1->id, graph);
+						}
+					}
+				}
+			}
+			v->color = 2;
+		}
+	}
+}
+
+template<typename Vertex_type, typename Distance_type>
+vector<Vertex_type>  Graph<Vertex_type, Distance_type>::walk(const Vertex_type& start_vertex)
+{
+	if (!has_vertex(start_vertex)) throw "No vertex";
+	vector<Vertex_type> walked;
+	all_white();
+	walk_all_vertexes(walked, start_vertex, graph);
+	for (auto v = graph.begin(); v != graph.end(); v++)
+	{
+		if (v->color == 0)
+		{
+			walk_all_vertexes(walked, v->id, graph);
+		}
+	}
+	return walked;
+}
+
+template<typename Vertex_type, typename Distance_type>
+Vertex_type Graph<Vertex_type, Distance_type>::task()
+{
+	vector<pair<Vertex_type, Distance_type>> avg_dist;
+	for (auto v = graph.begin(); v != graph.end(); v++)
+	{
+		pair<Vertex_type, Distance_type> one;
+		one.first = v->id;
+		one.second = 0;
+		for (auto v1 = graph.begin(); v1 != graph.end(); v1++)
+		{
+			if (v->id != v1->id)
+			{
+				try
+				{
+					vector<Vertex_type> short_pat;
+					try
+					{
+						short_pat = shortest_path(v->id, v1->id);
+					}
+					catch (const char* e)
+					{
+						throw e;
+					}
+					Distance_type dist = 0;
+					for (auto v = graph.begin(); v != graph.end(); v++)
+					{
+						if (v->id == short_pat[0])
+						{
+							while (short_pat.begin() + 1 != short_pat.end())
+							{
+								dist += get_path(short_pat[0], short_pat[1]);
+								short_pat.erase(short_pat.begin());
+							}
+						}
+					}
+					one.second += dist;
+				}
+				catch (const char* e)
+				{
+					throw e;
+				}
+			}
+		}
+		one.second /= size(graph);
+		avg_dist.push_back(one);
+	}
+	pair<Vertex_type, Distance_type> min;
+	min.second = avg_dist[0].second;
+	min.first = avg_dist[0].first;
+	avg_dist.erase(avg_dist.begin());
+	while (!avg_dist.empty())
+	{
+		if (avg_dist[0].second < min.second)
+		{
+			min.second = avg_dist[0].second;
+			min.first = avg_dist[0].first;
+		}
+		avg_dist.erase(avg_dist.begin());
+	}
+	return min.first;
 }

@@ -582,7 +582,7 @@ void deg(Graph<Vertex_type, Distance_type>& gr)
 	size_t degree = gr.degree();
 	if (degree == 0) SetConsoleTextAttribute(hStdOut, RED);
 	else SetConsoleTextAttribute(hStdOut, GREEN);
-	cout << "Порядок графа: " << degree << endl;
+	cout << "степень графа: " << degree << endl;
 	char ch = _getch();
 }
 
@@ -674,12 +674,91 @@ void shorts(Graph<Vertex_type, Distance_type>& gr)
 	
 }
 
+template<typename Vertex_type, typename Distance_type>
+void walking(Graph<Vertex_type, Distance_type>& gr)
+{
+	while (1)
+	{
+		Vertex_type from, to;
+		vector<Vertex_type> vec;
+		while (1)
+		{
+			SetConsoleTextAttribute(hStdOut, DEF_COL);
+			system("cls");
+			ConsoleCursorVisible(true, 100);
+			cout << "enter from: ";
+			int choice = 0;
+			while (!(cin >> from) || (cin.peek() != '\n'))
+			{
+				cin.clear();
+				while (cin.get() != '\n');
+
+				choice = s_choice(RED, "Text was entered");
+
+				break;
+			}
+			if (choice == 0)
+			{
+				if (!gr.has_vertex(from)) choice = s_choice(RED, "No vertex");
+			}
+			if (choice == 1) continue;
+			else if (choice == 2) return;
+			else
+			{
+				cout << endl;
+				break;
+			}
+		}
+		try
+		{
+			vec = gr.walk(from);
+			system("cls");
+			SetConsoleTextAttribute(hStdOut, DEF_COL);
+			cout << "Результат обхода: ";
+			for (auto i = vec.begin(); i != vec.end(); i++)
+			{
+				cout << *i;
+				if (i + 1 != vec.end()) cout << "-";
+			}
+			char ch = _getch();
+		}
+		catch (const char* e)
+		{
+			int choice = s_choice(RED, e);
+			if (choice == 2) return;
+			else continue;
+		}
+		return;
+	}
+
+
+}
+
+template<typename Vertex_type, typename Distance_type>
+void tasking(Graph<Vertex_type, Distance_type>& gr)
+{
+		try
+		{
+			Vertex_type v = gr.task();
+			system("cls");
+			SetConsoleTextAttribute(hStdOut, DEF_COL);
+			cout << "Лучшая вершина для 'склада': " << v;
+			char ch = _getch();
+		}
+		catch (const char* e)
+		{
+			int choice = s_choice(RED, e);
+			if (choice == 2) return;
+		}
+		return;
+}
+
 int main()
 {
 	setlocale(0, "rus");
 	string main_menu[] = { "Добавить вершину","Проверить наличие вершины","Удалить вершину","Добавить ребро","Удалить ребро",
 		"Удалить ребро с учетом расстояния","Проверить наличие ребра","Проверить наличие ребра с учетом расстояния","Все ребра из вершины",
-		"Пoрядок графа","Степень графа","Кратчайший путь","Закончить(ESC)"};
+		"Пoрядок графа","Степень графа","Кратчайший путь","Обход","Найти оптимальную so called точку для склада","Закончить(ESC)"};
 	int active_menu = 0;
 	char ch;
 	Graph<int> gr;
@@ -762,6 +841,12 @@ int main()
 				break;
 			case 11:
 				shorts(gr);
+				break;
+			case 12:
+				walking(gr);
+				break;
+			case 13:
+				tasking(gr);
 				break;
 			case size(main_menu) - 1:
 				SetConsoleTextAttribute(hStdOut, DEF_COL);

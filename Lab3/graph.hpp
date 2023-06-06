@@ -64,14 +64,29 @@ public:
 
     size_t order() const; //порядок
     size_t degree() const; //степень
-
+    Distance_type get_path(const Vertex_type& from, const Vertex_type& to)
+    {
+        for (auto v = graph.begin(); v != graph.end(); v++)
+        {
+            if (v->id == from)
+            {
+                for (auto e = v->edges.begin(); e != v->edges.end(); e++)
+                {
+                    if (e->to == to) return e->weight;
+                }
+            }
+        }
+    }
 
     //поиск кратчайшего пути
     vector<Vertex_type> shortest_path(const Vertex_type& from, const Vertex_type& to);  //Дейкстры
 
-    friend void find_path(vector<Vertex_type>& victor, const One_vertex<Vertex_type, Distance_type>& id, const Graph<Vertex_type, Distance_type>& graph);
+    friend void find_path(vector<Vertex_type>& victor, const One_vertex<Vertex_type, Distance_type>& id, vector<One_vertex<Vertex_type, Distance_type>>& graph);
     //обход
-    //std::vector<Vertex>  walk(const Vertex& start_vertex)const; В глубину
+    vector<Vertex_type>  walk(const Vertex_type& start_vertex); 
+    friend void walk_all_vertexes(vector<Vertex_type>&walked, const Vertex_type& start_vertex, vector<One_vertex<Vertex_type, Distance_type>>& graph);
+
+    Vertex_type task();
 };
 template Graph<int>;
 template Edge<int>;
